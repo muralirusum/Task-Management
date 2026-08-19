@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #0f172a;
+    font-weight: 700;
+  }
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Card and Panel utilities for pure white theme */
+.glass-panel {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.glass-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Global Light Theme Overrides for crisp black text on white backgrounds */
+.glass-card h1, .glass-card h2, .glass-card h3, .glass-card h4, .glass-card h5,
+.glass-panel h1, .glass-panel h2, .glass-panel h3, .glass-panel h4, .glass-panel h5,
+main h1, main h2, main h3, main h4, main h5,
+aside h1, aside h2, aside h3, aside h4, aside h5,
+header h1, header h2, header h3, header h4, header h5 {
+  color: #0f172a !important;
+}
+
+.glass-card .text-white,
+.glass-panel .text-white,
+main .text-white,
+aside .text-white,
+header .text-white {
+  color: #0f172a !important;
+}
+
+/* Ensure button texts with solid blue backgrounds stay white */
+button.bg-blue-600,
+button.bg-indigo-600,
+button.bg-emerald-600,
+button.bg-rose-600,
+button.bg-amber-600,
+.bg-blue-600,
+.bg-indigo-600 {
+  color: #ffffff !important;
+}
+
+/* Soft muted backgrounds for nested items universally */
+.glass-card .bg-slate-800,
+.glass-card .bg-slate-900,
+.glass-card .bg-slate-950,
+.glass-panel .bg-slate-800,
+.glass-panel .bg-slate-900,
+.glass-panel .bg-slate-950,
+main .bg-slate-800,
+main .bg-slate-900,
+main .bg-slate-950,
+.fixed .bg-slate-800,
+.fixed .bg-slate-900,
+.fixed .bg-slate-950,
+.bg-slate-800,
+.bg-slate-900,
+.bg-slate-950 {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Crisp text colors */
+.glass-card .text-slate-400,
+.glass-card .text-slate-300,
+.glass-card .text-slate-200,
+.glass-panel .text-slate-400,
+.glass-panel .text-slate-300,
+.glass-panel .text-slate-200,
+main .text-slate-400,
+main .text-slate-300,
+main .text-slate-200,
+.fixed .text-slate-400,
+.fixed .text-slate-300,
+.fixed .text-slate-200,
+.text-slate-400,
+.text-slate-300,
+.text-slate-200 {
+  color: #475569 !important;
+}
+
+/* Pulse glow animation for active blue timer */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(37, 99, 235, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px 2px rgba(37, 99, 235, 0.7);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
