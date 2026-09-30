@@ -227,54 +227,7 @@ export const TimeTrackingPage = () => {
         </div>
       </div>
 
-      {/* Historical Time Log Sessions */}
-      <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white">Recorded Time Tracking Sessions</h3>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-900 border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="px-5 py-3">Task</th>
-                <th className="px-5 py-3">Employee</th>
-                <th className="px-5 py-3">Type</th>
-                <th className="px-5 py-3">Duration</th>
-                <th className="px-5 py-3">Date</th>
-                <th className="px-5 py-3">Note</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-200">
-              {timeLogs.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-5 py-6 text-center text-slate-500">
-                    No time logs recorded yet.
-                  </td>
-                </tr>
-              ) : (
-                timeLogs.map((log) => (
-                  <tr key={log._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-5 py-3 font-medium text-slate-800 max-w-xs truncate">
-                      {log.taskId?.title || 'General Task'}
-                    </td>
-                    <td className="px-5 py-3 text-slate-300">{log.userId?.name}</td>
-                    <td className="px-5 py-3 capitalize font-mono text-indigo-300">{log.type}</td>
-                    <td className="px-5 py-3 font-mono font-bold text-slate-800">
-                      {Math.round((log.durationSeconds || 0) / 60)} mins
-                    </td>
-                    <td className="px-5 py-3 text-slate-400">
-                      {new Date(log.startTime).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </td>
-                    <td className="px-5 py-3 text-slate-400 max-w-xs truncate">{log.note || '—'}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
       <ManualTimeModal
         isOpen={isManualModalOpen}

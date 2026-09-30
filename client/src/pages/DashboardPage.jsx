@@ -37,12 +37,29 @@ import {
   Legend,
 } from 'recharts';
 
+import { LeaveNotificationBanner } from '../components/common/LeaveNotificationBanner';
+import { CeoDashboard } from './CeoDashboard';
+import { ManagerDashboard } from './ManagerDashboard';
+import { EmployeeDashboard } from './EmployeeDashboard';
+
 export const DashboardPage = () => {
   const { user, isMain, isMiddle, isLast } = useAuth();
   const { activeTimer, startTimer } = useTimer();
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  if (isMain) {
+    return <CeoDashboard />;
+  }
+
+  if (isMiddle) {
+    return <ManagerDashboard />;
+  }
+
+  if (isLast) {
+    return <EmployeeDashboard />;
+  }
 
   // Modals state
   const [selectedTask, setSelectedTask] = useState(null);
@@ -81,6 +98,9 @@ export const DashboardPage = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      {/* Leave Status Update Banner */}
+      <LeaveNotificationBanner />
+
       {/* Top Welcome Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden shadow-sm">
         <div className="relative z-10">
@@ -247,46 +267,6 @@ export const DashboardPage = () => {
               </div>
             </div>
           )}
-
-          {/* Employee Workload Cards */}
-          <div className="glass-card p-6 rounded-3xl border border-slate-800">
-            <h3 className="text-sm font-bold text-white mb-1">Company Workload & Employee Capacity</h3>
-            <p className="text-xs text-slate-400 mb-4">Real-time status across all reporting branches</p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {dashboardData?.employeeWorkload?.map((emp) => (
-                <div key={emp._id} className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={emp.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
-                      alt={emp.name}
-                      className="w-10 h-10 rounded-xl object-cover border border-slate-700"
-                    />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">{emp.name}</h4>
-                      <p className="text-[10px] text-indigo-400">{emp.position}</p>
-                      <span className="text-[10px] text-slate-500">{emp.department}</span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-center pt-2 border-t border-slate-800 text-[11px]">
-                    <div className="p-1.5 rounded-lg bg-slate-950">
-                      <p className="text-slate-400">Total</p>
-                      <p className="font-bold text-white mt-0.5">{emp.totalTasks}</p>
-                    </div>
-                    <div className="p-1.5 rounded-lg bg-slate-950">
-                      <p className="text-blue-400">Active</p>
-                      <p className="font-bold text-blue-300 mt-0.5">{emp.activeTasks}</p>
-                    </div>
-                    <div className="p-1.5 rounded-lg bg-slate-950">
-                      <p className="text-emerald-400">Done</p>
-                      <p className="font-bold text-emerald-300 mt-0.5">{emp.completedTasks}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </>
       )}
 
@@ -363,7 +343,7 @@ export const DashboardPage = () => {
                   <div key={emp._id} className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <img
-                        src={emp.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
+                        src={emp.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
                         alt={emp.name}
                         className="w-10 h-10 rounded-xl object-cover border border-slate-700"
                       />

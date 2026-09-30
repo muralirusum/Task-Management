@@ -13,7 +13,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
     title: '',
     description: '',
     taskType: 'General Work',
-    product: 'NovaCRM',
+    product: 'cGxP Wire',
     project: 'Customer Operations',
     customer: '',
     assignedTo: '',
@@ -68,7 +68,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
           title: '',
           description: '',
           taskType: 'General Work',
-          product: 'NovaCRM',
+          product: 'cGxP Wire',
           project: 'Customer Operations',
           customer: '',
           assignedTo: assignableUsers[0]?._id || '',
@@ -176,13 +176,16 @@ export const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">Product</label>
-            <input
-              type="text"
+            <select
               value={formData.product}
               onChange={(e) => setFormData({ ...formData, product: e.target.value })}
-              placeholder="e.g. NovaCRM, NovaERP"
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-            />
+            >
+              <option value="">-- Select Product --</option>
+              <option value="cGxP Wire">cGxP Wire</option>
+              <option value="cGxP Jobs">cGxP Jobs</option>
+              <option value="cGxP Directory">cGxP Directory</option>
+            </select>
           </div>
 
           <div>

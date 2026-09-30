@@ -42,9 +42,12 @@ const getReports = async (req, res) => {
       return new Date(t.dueDate) < now;
     }).length;
 
-    // 4. Total Working Hours
-    const totalMinutesLogged = dailyLogs.reduce((acc, c) => acc + (c.durationMinutes || 0), 0);
-    const totalHoursLogged = Number((totalMinutesLogged / 60).toFixed(1));
+    // 4. Total Real-time Working Hours
+    const dailyMinutes = dailyLogs.reduce((acc, c) => acc + (c.durationMinutes || 0), 0);
+    const entryMinutes = timeEntries.reduce((acc, c) => acc + (c.durationMinutes || (c.durationSeconds ? Math.round(c.durationSeconds / 60) : 0)), 0);
+    const taskHours = tasks.reduce((acc, c) => acc + (c.actualHours || 0), 0);
+
+    const totalHoursLogged = Number(((dailyMinutes + entryMinutes) / 60 + taskHours).toFixed(1));
 
     // 5. Tasks by Priority
     const priorityBreakdown = [

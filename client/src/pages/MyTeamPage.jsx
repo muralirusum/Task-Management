@@ -19,7 +19,8 @@ import {
   Edit2,
   Ban,
   CheckCircle2,
-  Eye
+  Eye,
+  Trash2
 } from 'lucide-react';
 
 export const MyTeamPage = () => {
@@ -77,6 +78,18 @@ export const MyTeamPage = () => {
     setIsFormModalOpen(true);
   };
 
+  const handleDeleteUser = async (userId, userName) => {
+    if (!window.confirm(`Are you sure you want to permanently delete ${userName}?`)) return;
+    try {
+      const res = await api.delete(`/users/${userId}`);
+      if (res.success) {
+        fetchTeamData();
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to delete user');
+    }
+  };
+
   const handleDisableUser = async (userId, currentStatus) => {
     const action = currentStatus === 'active' ? 'disable' : 'activate';
     if (!window.confirm(`Are you sure you want to ${action} this user?`)) return;
@@ -130,7 +143,7 @@ export const MyTeamPage = () => {
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
                     <img
-                      src={u.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
+                      src={u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
                       alt={u.name}
                       className="w-10 h-10 rounded-xl object-cover border border-slate-200"
                     />

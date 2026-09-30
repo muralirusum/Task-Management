@@ -50,7 +50,7 @@ const runIntegrationTests = async () => {
 
     // 2. Login CEO (Level 1)
     const arjunAuth = await request('POST', '/auth/login', {
-      email: 'ceo@novatech.com',
+      email: 'ceo@cgxptech.com',
       password: 'Demo@123',
     });
     console.log('2. [CEO Login]:', arjunAuth.status === 200 && arjunAuth.body.token ? '✅ PASSED' : '❌ FAILED');
@@ -58,7 +58,7 @@ const runIntegrationTests = async () => {
 
     // 3. Login MANAGER (Level 2)
     const priyaAuth = await request('POST', '/auth/login', {
-      email: 'manager@novatech.com',
+      email: 'manager@cgxptech.com',
       password: 'Demo@123',
     });
     console.log('3. [MANAGER Login]:', priyaAuth.status === 200 && priyaAuth.body.token ? '✅ PASSED' : '❌ FAILED');
@@ -66,7 +66,7 @@ const runIntegrationTests = async () => {
 
     // 4. Login EMPLOY (Level 3)
     const sandeepAuth = await request('POST', '/auth/login', {
-      email: 'employ@novatech.com',
+      email: 'employ@cgxptech.com',
       password: 'Demo@123',
     });
     console.log('4. [EMPLOY Login]:', sandeepAuth.status === 200 && sandeepAuth.body.token ? '✅ PASSED' : '❌ FAILED');

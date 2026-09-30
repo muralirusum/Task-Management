@@ -3,7 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import { MyProfileModal } from './MyProfileModal';
 import { SecurityModal } from './SecurityModal';
 import { SignOutModal } from './SignOutModal';
-import { User, ShieldCheck, Activity, LogOut, ChevronRight, Check, Briefcase } from 'lucide-react';
+import { DeleteAccountModal } from './DeleteAccountModal';
+import { User, ShieldCheck, Activity, LogOut, ChevronRight, Check, Briefcase, Trash2 } from 'lucide-react';
 
 export const ProfileDropdownMenu = () => {
   const { user, updatePresence, isActualCEO, previewRole, setPreviewRole } = useAuth();
@@ -14,6 +15,7 @@ export const ProfileDropdownMenu = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [showSecurity, setShowSecurity] = useState(false);
   const [showSignOut, setShowSignOut] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -189,16 +191,28 @@ export const ProfileDropdownMenu = () => {
               </div>
             </div>
 
-            <div className="border-t border-slate-100 mt-2 pt-2">
+            <div className="border-t border-slate-100 mt-2 pt-2 space-y-1">
               <button 
                 onClick={() => { setShowSignOut(true); setIsOpen(false); }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 text-left transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-white group-hover:text-slate-800 transition-colors shadow-sm border border-transparent group-hover:border-slate-200">
+                    <LogOut className="w-4 h-4 text-rose-500" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-700 group-hover:text-slate-900">Sign Out</span>
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setShowDeleteAccount(true); setIsOpen(false); }}
                 className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-rose-50 text-left transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-white group-hover:text-rose-600 transition-colors shadow-sm border border-transparent group-hover:border-rose-100">
-                    <LogOut className="w-4 h-4" />
+                  <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors shadow-sm border border-rose-100">
+                    <Trash2 className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold text-rose-600">Sign Out</span>
+                  <span className="text-xs font-bold text-rose-600">Delete Account</span>
                 </div>
               </button>
             </div>
@@ -211,6 +225,7 @@ export const ProfileDropdownMenu = () => {
       <MyProfileModal isOpen={showProfile} onClose={() => setShowProfile(false)} />
       <SecurityModal isOpen={showSecurity} onClose={() => setShowSecurity(false)} />
       <SignOutModal isOpen={showSignOut} onClose={() => setShowSignOut(false)} />
+      <DeleteAccountModal isOpen={showDeleteAccount} onClose={() => setShowDeleteAccount(false)} />
     </div>
   );
 };

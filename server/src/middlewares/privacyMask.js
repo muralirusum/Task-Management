@@ -81,21 +81,9 @@ const maskApprovalsForUser = (approvals, viewerUser) => {
 const maskActivitiesForUser = (activities, viewerUser, accessibleUserIds = []) => {
   if (!activities || !Array.isArray(activities)) return [];
 
-  if (viewerUser.role === 'main' || viewerUser.level === 1) {
+  // CEO (Level 1) and Manager (Level 2) see complete activity logs for team and organization
+  if (viewerUser.role === 'main' || viewerUser.role === 'ceo' || viewerUser.role === 'manager' || viewerUser.role === 'middle' || viewerUser.level <= 2) {
     return activities;
-  }
-
-  const userIdStr = viewerUser._id.toString();
-
-  if (viewerUser.role === 'middle' || viewerUser.level === 2) {
-    const accSet = new Set(accessibleUserIds.map((id) => id.toString()));
-    return activities.filter((act) => {
-      // Don't show Main Person internal actions unless related to Middle person's subordinates
-      if (act.isInternalOnly && act.userRole === 'main') return false;
-      const performerId = act.userId?.toString() || act.userId?._id?.toString();
-      const targetId = act.targetUserId?.toString() || act.targetUserId?._id?.toString();
-      return accSet.has(performerId) || (targetId && accSet.has(targetId));
-    });
   }
 
   // Last person: Only their own actions and direct assignments, without internal manager approval steps

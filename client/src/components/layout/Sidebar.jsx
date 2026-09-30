@@ -20,22 +20,29 @@ import {
   ClipboardList,
   ClipboardCheck,
   Settings,
-  CalendarDays
+  CalendarDays,
+  Briefcase,
+  UserPlus,
+  Building,
+  LogOut,
+  Bell,
+  MessageSquare
 } from 'lucide-react';
 
 export const Sidebar = () => {
-  const { user, isMain, isMiddle, isLast } = useAuth();
+  const { user, logout, isMain, isMiddle, isLast } = useAuth();
   const location = useLocation();
 
   const getNavLinks = () => {
     if (isMain) {
       return [
-        { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+        { label: 'CEO Dashboard', path: '/', icon: LayoutDashboard },
         { label: 'All Tasks', path: '/tasks', icon: CheckSquare },
         { label: 'Approvals', path: '/approvals', icon: CheckCircle2 },
         { label: 'Employees & Org', path: '/team', icon: Building2 },
+        { label: 'Communication', path: '/communication', icon: MessageSquare },
         { label: 'Daily Work Logs', path: '/daily-work', icon: FileText },
-        { label: 'Time Management', path: '/time', icon: Clock },
+        { label: 'Time Tracking', path: '/time', icon: Clock },
         { label: 'Projects & Products', path: '/projects', icon: FolderKanban },
         { label: 'Calendar', path: '/calendar', icon: CalendarIcon },
         { label: 'Reports & Analytics', path: '/reports', icon: BarChart3 },
@@ -46,12 +53,13 @@ export const Sidebar = () => {
 
     if (isMiddle) {
       return [
-        { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+        { label: 'Manager Dashboard', path: '/', icon: LayoutDashboard },
         { label: 'All Tasks', path: '/tasks', icon: CheckSquare },
         { label: 'Approvals', path: '/approvals', icon: CheckCircle2 },
         { label: 'Employees & Org', path: '/team', icon: Building2 },
+        { label: 'Communication', path: '/communication', icon: MessageSquare },
         { label: 'Daily Work Logs', path: '/daily-work', icon: FileText },
-        { label: 'Time Management', path: '/time', icon: Clock },
+        { label: 'Time Tracking', path: '/time', icon: Clock },
         { label: 'Projects & Products', path: '/projects', icon: FolderKanban },
         { label: 'Calendar', path: '/calendar', icon: CalendarIcon },
         { label: 'Reports & Analytics', path: '/reports', icon: BarChart3 },
@@ -62,15 +70,16 @@ export const Sidebar = () => {
 
     // Last Person navigation
     return [
-      { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+      { label: 'Employee Dashboard', path: '/', icon: LayoutDashboard },
       { label: 'My Tasks', path: '/tasks', icon: CheckSquare },
+      { label: 'Communication', path: '/communication', icon: MessageSquare },
       { label: 'My Daily Work', path: '/daily-work', icon: FileText },
       { label: 'Time Tracking', path: '/time', icon: Clock },
-      { label: 'Attendance', path: '/attendance', icon: CalendarDays },
       { label: 'Calendar', path: '/calendar', icon: CalendarIcon },
       { label: 'My Submissions', path: '/tasks?filter=submitted', icon: CheckCircle2 },
       { label: 'My Reports', path: '/reports', icon: BarChart3 },
       { label: 'My Activity', path: '/activity-logs', icon: History },
+      { label: 'Attendance', path: '/attendance', icon: CalendarDays },
     ];
   };
 
@@ -79,19 +88,11 @@ export const Sidebar = () => {
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0 z-30 select-none shadow-sm">
       {/* Brand Header */}
-      <div className="h-16 flex items-center gap-3 px-5 border-b border-slate-200 bg-white">
-        <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/20 text-white font-extrabold text-lg">
-          C
-        </div>
-        <div>
-          <h1 className="font-bold text-sm text-slate-900 tracking-wide leading-none flex items-center gap-1.5">
-            cGxP Tech
-            <span className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 font-mono px-1.5 py-0.5 rounded font-semibold">
-              SaaS
-            </span>
-          </h1>
-          <p className="text-[11px] text-slate-500 tracking-tight mt-0.5 font-medium">Work & Time Suite</p>
-        </div>
+      <div className="h-16 flex items-center px-6 border-b border-slate-200 bg-white">
+        <h1 className="text-2xl font-black tracking-tight flex items-baseline">
+          <span style={{ color: '#1d4ed8' }} className="font-extrabold">cGxP</span>
+          <span style={{ color: '#2563eb' }} className="font-bold ml-0.5 font-mono text-xl">.Tech</span>
+        </h1>
       </div>
 
       {/* Role Pill Header */}
@@ -153,7 +154,7 @@ export const Sidebar = () => {
       {/* Bottom Company Tag */}
       <div className="p-3 border-t border-slate-200 bg-slate-50 text-center">
         <p className="text-[11px] font-semibold text-slate-800">cGxP Tech</p>
-        <p className="text-[10px] text-slate-500">Hierarchical Management Suite</p>
+        <p className="text-[10px] text-slate-500">Workforce & Task Management SaaS</p>
       </div>
     </aside>
   );

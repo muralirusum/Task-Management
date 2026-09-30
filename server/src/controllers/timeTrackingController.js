@@ -352,13 +352,21 @@ const getTimeLogs = async (req, res) => {
 
 const getSummaryData = async (req, res) => {
   try {
-    const { range = 'thisWeek' } = req.query;
+    const { range = 'thisWeek', customStart, customEnd } = req.query;
     const accessibleIds = await getAccessibleUserIds(req.user);
 
     const now = new Date();
     let startDate, endDate;
 
-    if (range === 'thisMonth') {
+    if (range === 'today') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    } else if (range === 'custom' && customStart && customEnd) {
+      startDate = new Date(customStart);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(customEnd);
+      endDate.setHours(23, 59, 59, 999);
+    } else if (range === 'thisMonth') {
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
       endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
     } else if (range === 'lastWeek') {

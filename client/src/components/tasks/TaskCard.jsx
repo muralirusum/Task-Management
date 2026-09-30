@@ -69,13 +69,13 @@ export const TaskCard = ({ task, onClick, onSubmitClick, onReviewClick }) => {
         <div className="flex items-center justify-between pt-1">
           <div className="flex items-center gap-2">
             <img
-              src={task.assignedTo?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
-              alt={task.assignedTo?.name}
-              className="w-6 h-6 rounded-full object-cover border border-slate-200"
+              src={task.assignedTo?.avatar || (isAssignedToMe ? user?.avatar : null) || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
+              alt={task.assignedTo?.name || (isAssignedToMe ? user?.name : 'Assignee')}
+              className="w-7 h-7 rounded-full object-cover border-2 border-slate-800"
             />
-            <div className="text-left">
-              <p className="text-xs font-bold text-slate-900 leading-none">{task.assignedTo?.name}</p>
-              <p className="text-[10px] text-slate-500">{task.assignedTo?.position}</p>
+            <div>
+              <p className="text-xs font-bold text-slate-900 leading-none">{task.assignedTo?.name || (isAssignedToMe ? user?.name : 'Unknown')}</p>
+              <p className="text-[10px] text-slate-500">{task.assignedTo?.position || (isAssignedToMe ? user?.position : '')}</p>
             </div>
           </div>
 

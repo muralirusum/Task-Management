@@ -95,6 +95,14 @@ main .bg-slate-950,
   border-color: #e2e8f0 !important;
 }
 
+/* Fix hover states for light theme hack */
+.hover\:bg-slate-700:hover,
+.hover\:bg-slate-800:hover,
+.hover\:bg-slate-900:hover,
+.hover\:bg-slate-950:hover {
+  background-color: #f1f5f9 !important;
+}
+
 /* Crisp text colors */
 .glass-card .text-slate-400,
 .glass-card .text-slate-300,

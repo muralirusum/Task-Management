@@ -10,25 +10,9 @@ export const AuthProvider = ({ children }) => {
   });
   const [token, setToken] = useState(() => localStorage.getItem('novatech_token') || null);
   const [loading, setLoading] = useState(true);
-  const [demoUsers, setDemoUsers] = useState([]);
   const [previewRole, setPreviewRole] = useState(null);
 
-  // Fetch demo accounts list for fast switcher
-  useEffect(() => {
-    const loadDemoUsers = async () => {
-      try {
-        const res = await api.get('/auth/demo-users');
-        if (res.success) {
-          setDemoUsers(res.users);
-        }
-      } catch (err) {
-        console.error('Failed to load demo users', err);
-      }
-    };
-    loadDemoUsers();
-  }, []);
-
-  // Verify auth on mount
+  // Verify auth on mount and keep session valid across browser refreshes
   useEffect(() => {
     const verifyAuth = async () => {
       if (token) {
@@ -42,12 +26,98 @@ export const AuthProvider = ({ children }) => {
           console.error('Auth verification failed', err);
           logout();
         }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     };
 
     verifyAuth();
   }, [token]);
+
+  const register = async ({ name, full_name, email, password, confirmPassword, role = 'employee', position, department }) => {
+    try {
+      const res = await api.post('/auth/register', {
+        name: name || full_name,
+        full_name: full_name || name,
+        email,
+        password,
+        confirmPassword,
+        role,
+        position,
+        department,
+      });
+
+      if (res.success) {
+        if (res.token) {
+          setToken(res.token);
+          setUser(res.user);
+          localStorage.setItem('novatech_token', res.token);
+          localStorage.setItem('novatech_user', JSON.stringify(res.user));
+        }
+        return { success: true, user: res.user };
+      }
+    } catch (err) {
+      return { success: false, message: err.message || 'Registration failed' };
+    }
+  };
+
+  const verifyOtp = async (email, otp) => {
+    try {
+      const res = await api.post('/auth/verify-otp', { email, otp });
+      if (res.success) {
+        setToken(res.token);
+        setUser(res.user);
+        localStorage.setItem('novatech_token', res.token);
+        localStorage.setItem('novatech_user', JSON.stringify(res.user));
+        return { success: true, user: res.user };
+      }
+    } catch (err) {
+      return { success: false, message: err.message || 'OTP verification failed' };
+    }
+  };
+
+  const resendOtp = async (email) => {
+    try {
+      const res = await api.post('/auth/resend-otp', { email });
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to resend OTP' };
+    }
+  };
+
+  const requestDeleteOtp = async () => {
+    try {
+      const res = await api.post('/auth/request-delete-otp');
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to request delete OTP' };
+    }
+  };
+
+  const confirmDeleteAccount = async (otp) => {
+    try {
+      const res = await api.delete('/auth/delete-account', { data: { otp } });
+      if (res.success) {
+        logout();
+      }
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to delete account' };
+    }
+  };
+
+  const deleteAccountWithPassword = async (password) => {
+    try {
+      const res = await api.delete('/auth/delete-account-password', { data: { password } });
+      if (res.success) {
+        logout();
+      }
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to delete account' };
+    }
+  };
 
   const login = async (email, password) => {
     try {
@@ -60,31 +130,46 @@ export const AuthProvider = ({ children }) => {
         return { success: true };
       }
     } catch (err) {
-      return { success: false, message: err.message || 'Login failed' };
+      return {
+        success: false,
+        isUnverified: err.isUnverified || false,
+        email: err.email || '',
+        message: err.message || 'Invalid email or password',
+      };
     }
   };
 
-  const switchDemo = async (email) => {
+  const forgotPassword = async (email) => {
     try {
-      setLoading(true);
-      const res = await api.post('/auth/switch-demo', { email });
-      if (res.success) {
-        setToken(res.token);
-        setUser(res.user);
-        localStorage.setItem('novatech_token', res.token);
-        localStorage.setItem('novatech_user', JSON.stringify(res.user));
-        setLoading(false);
-        return { success: true };
-      }
+      const res = await api.post('/auth/forgot-password', { email });
+      return res;
     } catch (err) {
-      setLoading(false);
-      return { success: false, message: err.message || 'Switch failed' };
+      return { success: false, message: err.message || 'Failed to request password reset' };
+    }
+  };
+
+  const resetPassword = async (resetToken, password, confirmPassword) => {
+    try {
+      const res = await api.post(`/auth/reset-password/${resetToken}`, { password, confirmPassword });
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to reset password' };
+    }
+  };
+
+  const verifyEmail = async (verificationToken) => {
+    try {
+      const res = await api.post('/auth/verify-email', { verificationToken });
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to verify email' };
     }
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
+    setPreviewRole(null);
     localStorage.removeItem('novatech_token');
     localStorage.removeItem('novatech_user');
   };
@@ -118,11 +203,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const isActualCEO = user?.role === 'ceo' || user?.role === 'main' || user?.level === 1;
-  const effectiveRole = previewRole || user?.role;
-  const effectiveLevel = previewRole === 'ceo' ? 1 : previewRole === 'manager' ? 2 : previewRole === 'employee' ? 3 : user?.level;
+  const updateProfile = async (updates) => {
+    try {
+      const res = await api.put(`/users/${user.id || user._id}`, updates);
+      if (res.success) {
+        updateLocalUser(res.user);
+      }
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to update profile' };
+    }
+  };
 
-  const isCEO = effectiveRole === 'ceo' || effectiveRole === 'main' || effectiveLevel === 1;
+  // Role detection logic
+  const isActualCEO = user?.role === 'ceo' || user?.role === 'employer' || user?.role === 'main' || user?.level === 1;
+  const effectiveRole = previewRole || user?.role;
+  const effectiveLevel = previewRole === 'ceo' || previewRole === 'employer' ? 1 : previewRole === 'manager' ? 2 : previewRole === 'employee' ? 3 : user?.level;
+
+  const isCEO = effectiveRole === 'ceo' || effectiveRole === 'employer' || effectiveRole === 'main' || effectiveLevel === 1;
   const isManager = effectiveRole === 'manager' || effectiveRole === 'middle' || effectiveLevel === 2;
   const isEmployee = effectiveRole === 'employee' || effectiveRole === 'last' || effectiveLevel >= 3;
 
@@ -147,13 +245,21 @@ export const AuthProvider = ({ children }) => {
         isMain,
         isMiddle,
         isLast,
-        demoUsers,
+        register,
+        verifyOtp,
+        resendOtp,
+        requestDeleteOtp,
+        confirmDeleteAccount,
+        deleteAccountWithPassword,
         login,
-        switchDemo,
+        forgotPassword,
+        resetPassword,
+        verifyEmail,
         logout,
         updateLocalUser,
         changePassword,
         updatePresence,
+        updateProfile,
       }}
     >
       {children}

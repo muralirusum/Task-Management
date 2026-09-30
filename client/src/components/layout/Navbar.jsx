@@ -12,6 +12,8 @@ import {
   CheckCircle,
   ExternalLink,
   ChevronRight,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ProfileDropdownMenu } from '../profile/ProfileDropdownMenu';

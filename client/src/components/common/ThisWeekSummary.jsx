@@ -11,20 +11,31 @@ export const ThisWeekSummary = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [customStart, setCustomStart] = useState('');
+  const [customEnd, setCustomEnd] = useState('');
+
   const [modalState, setModalState] = useState({ isOpen: false, type: null });
 
   const rangeLabels = {
+    today: 'Today',
     thisWeek: 'This Week',
     lastWeek: 'Last Week',
     thisMonth: 'This Month',
+    custom: 'Custom Range',
   };
 
   useEffect(() => {
     const fetchSummary = async () => {
+      if (range === 'custom' && (!customStart || !customEnd)) return;
+      
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get(`/time/summary?range=${range}`);
+        let url = `/time/summary?range=${range}`;
+        if (range === 'custom') {
+          url += `&customStart=${customStart}&customEnd=${customEnd}`;
+        }
+        const response = await api.get(url);
         if (response.success) {
           setData(response);
         } else {
@@ -38,7 +49,7 @@ export const ThisWeekSummary = () => {
     };
 
     fetchSummary();
-  }, [range]);
+  }, [range, customStart, customEnd]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -74,12 +85,12 @@ export const ThisWeekSummary = () => {
           <h3 className="text-[17px] font-extrabold text-slate-800 tracking-tight">Period Summary</h3>
           
           <div className="relative" ref={dropdownRef}>
-            <button 
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-slate-50/50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              {rangeLabels[range]} <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-            </button>
+              <button 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50/50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors whitespace-nowrap"
+              >
+                {rangeLabels[range]} <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              </button>
             
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-lg border border-slate-100 z-10 overflow-hidden">
@@ -97,8 +108,26 @@ export const ThisWeekSummary = () => {
                 ))}
               </div>
             )}
-          </div>
+            </div>
         </div>
+
+        {range === 'custom' && (
+          <div className="flex items-center gap-2 text-xs bg-slate-50 border border-slate-100 p-2.5 rounded-xl">
+            <input 
+              type="date" 
+              value={customStart} 
+              onChange={(e) => setCustomStart(e.target.value)} 
+              className="w-full bg-white border border-slate-200 text-slate-600 px-2 py-1.5 rounded-lg focus:outline-none focus:border-indigo-500 shadow-sm" 
+            />
+            <span className="text-slate-400 font-semibold">to</span>
+            <input 
+              type="date" 
+              value={customEnd} 
+              onChange={(e) => setCustomEnd(e.target.value)} 
+              className="w-full bg-white border border-slate-200 text-slate-600 px-2 py-1.5 rounded-lg focus:outline-none focus:border-indigo-500 shadow-sm" 
+            />
+          </div>
+        )}
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3 text-slate-400">

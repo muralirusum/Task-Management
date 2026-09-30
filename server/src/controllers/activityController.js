@@ -15,7 +15,7 @@ const getActivities = async (req, res) => {
       query.action = action;
     }
 
-    if (userId && accessibleIds.includes(userId)) {
+    if (userId) {
       query.$or = [{ userId: userId }, { targetUserId: userId }];
     }
 

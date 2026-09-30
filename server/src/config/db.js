@@ -6,10 +6,13 @@ const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/novatech_task_db';
     
-    // Try connecting to provided URI with a short timeout
+    // Try connecting to provided URI with appropriate timeouts
     try {
       const conn = await mongoose.connect(mongoUri, {
-        serverSelectionTimeoutMS: 2500,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+        maxPoolSize: 10,
       });
       console.log(`[MongoDB] Connected to external MongoDB: ${conn.connection.host}`);
       return conn;
@@ -39,3 +42,4 @@ const closeDB = async () => {
 };
 
 module.exports = { connectDB, closeDB };
+

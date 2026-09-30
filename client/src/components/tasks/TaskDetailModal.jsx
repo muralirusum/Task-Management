@@ -103,13 +103,13 @@ export const TaskDetailModal = ({ isOpen, onClose, task, onTaskUpdated, onOpenSu
             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Assigned To</p>
             <div className="flex items-center gap-2.5 mt-2">
               <img
-                src={task.assignedTo?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
-                alt={task.assignedTo?.name}
+                src={task.assignedTo?.avatar || (isAssignedToMe ? user?.avatar : null) || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
+                alt={task.assignedTo?.name || (isAssignedToMe ? user?.name : 'Assignee')}
                 className="w-7 h-7 rounded-full object-cover border border-slate-700"
               />
               <div>
-                <p className="text-xs font-semibold text-white">{task.assignedTo?.name}</p>
-                <p className="text-[10px] text-slate-400">{task.assignedTo?.position}</p>
+                <p className="text-xs font-semibold text-white">{task.assignedTo?.name || (isAssignedToMe ? user?.name : 'Unknown')}</p>
+                <p className="text-[10px] text-slate-400">{task.assignedTo?.position || (isAssignedToMe ? user?.position : '')}</p>
               </div>
             </div>
           </div>

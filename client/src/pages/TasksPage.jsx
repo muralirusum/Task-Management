@@ -240,7 +240,7 @@ export const TasksPage = () => {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
                         <img
-                          src={t.assignedTo?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
+                          src={t.assignedTo?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
                           alt={t.assignedTo?.name}
                           className="w-6 h-6 rounded-full object-cover"
                         />

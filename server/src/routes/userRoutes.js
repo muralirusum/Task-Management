@@ -9,6 +9,7 @@ const {
   updateUser,
   disableUser,
   updatePresence,
+  deleteUser,
 } = require('../controllers/userController');
 const { authenticateUser } = require('../middlewares/auth');
 const { checkHierarchyAccess } = require('../middlewares/hierarchy');
@@ -23,5 +24,6 @@ router.patch('/presence', updatePresence);
 router.get('/:id', checkHierarchyAccess((req) => req.params.id), getUserById);
 router.put('/:id', updateUser);
 router.patch('/:id/disable', disableUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;

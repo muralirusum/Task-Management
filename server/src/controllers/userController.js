@@ -8,8 +8,23 @@ const { getAccessibleUserIds, getSubordinateIds } = require('../middlewares/hier
 // @access  Private
 const getUsers = async (req, res) => {
   try {
-    const accessibleIds = await getAccessibleUserIds(req.user);
-    const users = await User.find({ _id: { $in: accessibleIds } })
+    // Purge fake demo users automatically from active database
+    await User.deleteMany({
+      $or: [
+        { email: { $in: ['employ@cgxptech.com', 'employ@novatech.com', 'manager@novatech.com', 'ceo@novatech.com'] } },
+        { name: { $in: ['Employee User', 'Manager User', 'Admin CEO'] } }
+      ]
+    });
+
+    let query = {};
+    if (req.query.forChat === 'true' || req.query.all === 'true') {
+      query = {}; // All users available for chat communication
+    } else {
+      const accessibleIds = await getAccessibleUserIds(req.user);
+      query = { _id: { $in: accessibleIds } };
+    }
+
+    const users = await User.find(query)
       .populate('managerId', 'name position department role')
       .sort({ level: 1, department: 1, name: 1 });
 
@@ -39,9 +54,15 @@ const getAssignableUsers = async (req, res) => {
     }
 
     if (req.user.role === 'manager' || req.user.role === 'middle' || req.user.level === 2) {
-      // Manager can assign to their direct/indirect subordinates
-      const subIds = await getSubordinateIds(req.user._id);
-      const users = await User.find({ _id: { $in: subIds } }).select('name email role position department level avatar');
+      // Manager can assign tasks to all employees
+      const users = await User.find({
+        _id: { $ne: req.user._id },
+        $or: [
+          { role: { $in: ['employee', 'last'] } },
+          { level: { $gte: 3 } },
+          { managerId: req.user._id }
+        ]
+      }).select('name email role position department level avatar');
       return res.json({ success: true, users });
     }
 
@@ -371,6 +392,19 @@ const updatePresence = async (req, res) => {
   }
 };
 
+// @desc    Delete user account
+// @route   DELETE /api/users/:id
+// @access  Private
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await User.findByIdAndDelete(id);
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to delete user', error: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getAssignableUsers,
@@ -380,4 +414,5 @@ module.exports = {
   updateUser,
   disableUser,
   updatePresence,
+  deleteUser,
 };

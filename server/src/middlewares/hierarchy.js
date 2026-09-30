@@ -25,14 +25,21 @@ const getSubordinateIds = async (managerId) => {
  * - Last Person (Level 3): Can ONLY see themselves.
  */
 const getAccessibleUserIds = async (user) => {
-  if (user.role === 'ceo' || user.role === 'main' || user.level === 1) {
+  if (user.role === 'ceo' || user.role === 'main' || user.role === 'employer' || user.level === 1) {
     const allUsers = await User.find().select('_id');
     return allUsers.map((u) => u._id.toString());
   }
 
   if (user.role === 'manager' || user.role === 'middle' || user.level === 2) {
-    const subordinateIds = await getSubordinateIds(user._id);
-    return [user._id.toString(), ...subordinateIds.map((id) => id.toString())];
+    // Managers can access themselves, direct/indirect subordinates, and all employees (level 3)
+    const accessible = await User.find({
+      $or: [
+        { _id: user._id },
+        { level: { $gte: 2 } },
+        { role: { $in: ['employee', 'last', 'manager', 'middle'] } }
+      ]
+    }).select('_id');
+    return accessible.map((u) => u._id.toString());
   }
 
   // Employee (Level 3) only has access to their own data

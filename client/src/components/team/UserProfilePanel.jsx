@@ -68,7 +68,7 @@ export const UserProfilePanel = ({ userId, isOpen, onClose, onUpdate }) => {
           <div className="text-center space-y-3">
             <div className="relative inline-block mx-auto">
               <img
-                src={profile.user.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200'}
+                src={profile.user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'}
                 alt={profile.user.name}
                 className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
               />

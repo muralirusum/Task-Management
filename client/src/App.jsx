@@ -18,6 +18,7 @@ import { ReportsPage } from './pages/ReportsPage';
 import { ActivityHistoryPage } from './pages/ActivityHistoryPage';
 import { EmployeeLogsPage } from './pages/EmployeeLogsPage';
 import { AttendancePage } from './pages/AttendancePage';
+import { CommunicationPage } from './pages/CommunicationPage';
 
 // Protected Route Guard
 const ProtectedRoute = ({ children }) => {
@@ -67,6 +68,7 @@ export function App() {
                   <Route path="calendar" element={<CalendarPage />} />
                   <Route path="team" element={<MyTeamPage />} />
                   <Route path="my-team" element={<MyTeamPage />} />
+                  <Route path="communication" element={<CommunicationPage />} />
                   <Route path="projects" element={<ProjectsPage />} />
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="activity-logs" element={<ActivityHistoryPage />} />

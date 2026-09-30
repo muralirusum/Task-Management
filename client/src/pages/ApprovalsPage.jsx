@@ -115,7 +115,7 @@ export const ApprovalsPage = () => {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <img
-                        src={task.assignedTo?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
+                        src={task.assignedTo?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
                         alt={task.assignedTo?.name}
                         className="w-6 h-6 rounded-full object-cover border border-slate-700"
                       />
@@ -139,65 +139,6 @@ export const ApprovalsPage = () => {
             ))}
           </div>
         )}
-      </div>
-
-      {/* Approval Audit History */}
-      <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white">Recent Approval Log & Decisions</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-900 border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="px-5 py-3">Task Title</th>
-                <th className="px-5 py-3">Reviewer</th>
-                <th className="px-5 py-3">Action</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3">Comments</th>
-                <th className="px-5 py-3">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-200">
-              {approvalsHistory.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-5 py-6 text-center text-slate-500">
-                    No historical approvals recorded yet.
-                  </td>
-                </tr>
-              ) : (
-                approvalsHistory.map((app) => (
-                  <tr key={app._id} className="hover:bg-slate-800 transition-colors">
-                    <td className="px-5 py-3 font-semibold text-white max-w-xs truncate">
-                      {app.taskId?.title || 'System Task'}
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={app.reviewerId?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
-                          alt={app.reviewerId?.name}
-                          className="w-5 h-5 rounded-full object-cover"
-                        />
-                        <span>{app.reviewerId?.name}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">({app.reviewerRole})</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3 capitalize font-mono text-indigo-300">
-                      {app.action?.replace(/_/g, ' ')}
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                        {app.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-slate-300 max-w-xs truncate">{app.comments}</td>
-                    <td className="px-5 py-3 text-slate-400">
-                      {new Date(app.reviewedAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
       </div>
 
       {/* Review Modal */}

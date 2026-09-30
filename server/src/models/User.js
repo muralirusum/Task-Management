@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -23,18 +24,18 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['ceo', 'manager', 'employee', 'main', 'middle', 'last'],
+      enum: ['ceo', 'manager', 'employer', 'employee', 'main', 'middle', 'last'],
       default: 'employee',
       required: true,
     },
     position: {
       type: String,
-      required: true,
+      default: 'Team Member',
       trim: true,
     },
     department: {
       type: String,
-      required: true,
+      default: 'Operations',
       trim: true,
     },
     managerId: {
@@ -45,8 +46,36 @@ const userSchema = new mongoose.Schema(
     level: {
       type: Number,
       required: true,
-      default: 3, // 1: Main, 2: Middle, 3: Last (or arbitrary N)
+      default: 3, // 1: Main/CEO/Employer, 2: Middle/Manager, 3: Last/Employee
     },
+    emailVerified: {
+      type: Boolean,
+      default: true,
+    },
+    otpCode: {
+      type: String,
+      default: null,
+    },
+    otpCodeHash: {
+      type: String,
+      default: null,
+    },
+    otpExpire: {
+      type: Date,
+      default: null,
+    },
+    otpLastSentAt: {
+      type: Date,
+      default: null,
+    },
+    otpAttempts: {
+      type: Number,
+      default: 0,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    verificationToken: String,
+    verificationTokenExpire: Date,
     avatar: {
       type: String,
       default: '',
@@ -73,6 +102,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Virtual for full_name
+userSchema.virtual('full_name').get(function () {
+  return this.name;
+});
+
 // Encrypt password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
@@ -86,6 +120,22 @@ userSchema.pre('save', async function (next) {
 // Compare password method
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate and hash password reset token
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 Hour
+  return resetToken;
+};
+
+// Generate email verification token
+userSchema.methods.getVerificationToken = function () {
+  const token = crypto.randomBytes(20).toString('hex');
+  this.verificationToken = crypto.createHash('sha256').update(token).digest('hex');
+  this.verificationTokenExpire = Date.now() + 24 * 60 * 60 * 1000; // 24 Hours
+  return token;
 };
 
 module.exports = mongoose.model('User', userSchema);

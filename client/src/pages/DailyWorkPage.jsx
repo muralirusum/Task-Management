@@ -175,7 +175,7 @@ export const DailyWorkPage = () => {
               >
                 <div className="flex items-start gap-3.5">
                   <img
-                    src={entry.userId?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'}
+                    src={entry.userId?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100'}
                     alt={entry.userId?.name}
                     className="w-9 h-9 rounded-xl object-cover border border-slate-700 mt-0.5"
                   />
